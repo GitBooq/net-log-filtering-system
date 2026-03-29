@@ -1,3 +1,7 @@
+/**
+ * @file streamproc.hpp
+ * @brief Stream Processor
+ */
 #pragma once
 
 #include <cstddef>   // for size_t
@@ -11,15 +15,27 @@
 
 namespace net::details {
 
+/**
+ * @brief Parse input and output result after filtering.
+ * Batch filtering.
+ */
 class StreamProcessor {
  public:
+  /**
+   * @brief Construct a new Stream Processor object.
+   * Reserves batch_size bytes in output buffer.
+   *
+   * @param batch_size
+   */
   explicit StreamProcessor(size_t batch_size = DEFAULT_BATCH_SIZE)
       : batch_size_(batch_size) {
     buffer_.reserve(batch_size);
   }
 
   /**
-   * I/O process
+   * @brief Parse, filter, output.
+   * Output when buffer is full, or input ends
+   * @tparam T filter type
    * @param input input stream (logs)
    * @param output output stream (result)
    * @param filter filter to apply to input stream
@@ -28,16 +44,29 @@ class StreamProcessor {
   void process(std::istream& input, std::ostream& output, const T& filter);
 
  private:
+  /**
+   * @brief Input file line structure
+   *
+   */
   struct LogEntry {
     IPv4Address ip;
     std::string line;
     size_t line_number;
   };
 
-  // Parse IPAddr from log string "IP - message"
+  /**
+   * @brief Parse IPAddr from string "IP - message"
+   *
+   * @param line string to parse
+   * @return std::optional<IPv4Address>
+   */
   std::optional<IPv4Address> parse_ip_from_line(const std::string& line) const;
 
-  // Output buffer and clear
+  /**
+   * @brief Output buffer and clear
+   *
+   * @param output output stream
+   */
   void flush_buffer(std::ostream& output);
 
   static constexpr size_t DEFAULT_BATCH_SIZE = 1000u;

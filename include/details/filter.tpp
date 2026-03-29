@@ -1,3 +1,7 @@
+/**
+ * @file filter.tpp
+ * @brief Filters impl
+ */
 #pragma once
 
 #include <charconv>      // for from_chars, from_chars_result
@@ -11,6 +15,7 @@
 #include "ipaddr.hpp"  // for IPv4Address
 
 namespace net::details {
+// Forward dcls
 class RangeFilter;
 class SubnetFilter;
 

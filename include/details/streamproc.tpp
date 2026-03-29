@@ -1,3 +1,8 @@
+/**
+ * @file streamproc.tpp
+ * @brief Stream Processor impl
+ */
+
 #pragma once
 
 #include <algorithm>    // for __copy_fn, copy
@@ -52,20 +57,10 @@ inline std::optional<IPv4Address> StreamProcessor::parse_ip_from_line(
 // Output buffer to ostream and clear
 inline void StreamProcessor::flush_buffer(std::ostream& output) {
   if (buffer_.empty()) return;
-#if 1
+
   std::ranges::copy(buffer_ | std::views::transform(&LogEntry::line),
                     std::ostream_iterator<std::string>(output, "\n"));
-#endif
-#if 0
-  std::transform(buffer_.begin(), buffer_.end(),
-                 std::ostream_iterator<std::string>(output, "\n"),
-                 [](const LogEntry& entry) { return entry.line; });
-#endif
-#if 0
-  for (const auto& entry : buffer_) {
-    output << entry.line << '\n';
-  }
-#endif
+
   buffer_.clear();
   output.flush();
 }

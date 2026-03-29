@@ -1,3 +1,8 @@
+/**
+ * @file netlogger.hpp
+ * @brief NetLogger user interface
+ */
+
 #pragma once
 
 #include <array>             // for array
@@ -30,12 +35,22 @@ class FilterConfigError final : public std::exception {
   std::string msg_;
 };
 
+/**
+ * @brief Filter config parser
+ *
+ */
 struct FilterConfig {
-  std::string type;
-  std::string value;
+  std::string type;   ///< filter type
+  std::string value;  ///< ipv4addr
 
-  static constexpr size_t FIELDS = 4;
+  static constexpr size_t FIELDS = 4;  ///< number of fields in config line
 
+  /**
+   * @brief Construct a new Filter Config object from init list of strings.
+   *
+   * @throw FilterConfigError
+   * @param il init list
+   */
   FilterConfig(std::initializer_list<std::string> il) {
     if (il.size() != FIELDS) {
       throw FilterConfigError("FilterConfig expects 4 fields");
@@ -54,7 +69,14 @@ struct FilterConfig {
 };
 
 /**
- * Create filter with AND-semantics
+ * @brief Create a filter object.
+ * Compose filters such as ip should match all filters.(AND)
+ * @param configs filter string representations
+ * @note Usage:
+ *   auto filter =
+      create_filter({{"type", "subnet", "value", "0.0.0.0/0"},
+                     {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
+ * @return CompositeFilter
  */
 inline CompositeFilter create_filter(const std::vector<FilterConfig>& configs) {
   CompositeFilter filter;
@@ -73,6 +95,13 @@ inline CompositeFilter create_filter(const std::vector<FilterConfig>& configs) {
   return filter;
 }
 
+/**
+ * @brief Start parse and filtering process.
+ * Parse input stream, apply filter and output to output stream.
+ * @param input
+ * @param output
+ * @param filter
+ */
 inline void process_stream(std::istream& input, std::ostream& output,
                            const CompositeFilter& filter) {
   StreamProcessor processor;
