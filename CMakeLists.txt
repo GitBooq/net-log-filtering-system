@@ -16,7 +16,7 @@ option(ENABLE_SANITIZERS "Enable sanitizers" ON)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
     # exclude self assignment as error
-    add_compile_options(-Wno-error=self-assign-overloaded)
+    # add_compile_options(-Wno-error=self-assign-overloaded)
 endif()
 
 include_directories(${INCLUDE_DIR})
