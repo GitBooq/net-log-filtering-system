@@ -1,0 +1,51 @@
+#pragma once
+
+#include <cstddef>   // for size_t
+#include <istream>   // for ostream, istream
+#include <optional>  // for optional
+#include <string>    // for string
+#include <vector>    // for vector
+
+#include "filter.hpp"  // for FilterType
+#include "ipaddr.hpp"  // for IPv4Address
+
+namespace net::details {
+
+class StreamProcessor {
+ public:
+  explicit StreamProcessor(size_t batch_size = DEFAULT_BATCH_SIZE)
+      : batch_size_(batch_size) {
+    buffer_.reserve(batch_size);
+  }
+
+  /**
+   * I/O process
+   * @param input input stream (logs)
+   * @param output output stream (result)
+   * @param filter filter to apply to input stream
+   */
+  template <FilterType T>
+  void process(std::istream& input, std::ostream& output, const T& filter);
+
+ private:
+  struct LogEntry {
+    IPv4Address ip;
+    std::string line;
+    size_t line_number;
+  };
+
+  // Parse IPAddr from log string "IP - message"
+  std::optional<IPv4Address> parse_ip_from_line(const std::string& line) const;
+
+  // Output buffer and clear
+  void flush_buffer(std::ostream& output);
+
+  static constexpr size_t DEFAULT_BATCH_SIZE = 1000u;
+
+  std::vector<LogEntry> buffer_;  ///< buffer for output
+  size_t batch_size_;             ///< max buffer size
+};
+
+}  // namespace net::details
+
+#include "details/streamproc.tpp"
