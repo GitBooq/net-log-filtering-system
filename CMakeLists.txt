@@ -45,14 +45,8 @@ target_link_libraries(main PRIVATE
 )
 
 if (ENABLE_SANITIZERS)
-    target_compile_options(ipaddr INTERFACE
-        -fsanitize=address,undefined
-        -fno-omit-frame-pointer
-        -g
-    )
-    target_link_options(ipaddr INTERFACE
-        -fsanitize=address,undefined
-    )
+    add_compile_options(-fsanitize=address,undefined -g -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address,undefined)
 endif()
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test.log)
