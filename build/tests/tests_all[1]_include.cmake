@@ -1,5 +1,0 @@
-if(EXISTS "/mnt/c/Users/dA_Stronghold/Desktop/CPP/net-log-filtering-system/build/tests/tests_all[1]_tests.cmake")
-  include("/mnt/c/Users/dA_Stronghold/Desktop/CPP/net-log-filtering-system/build/tests/tests_all[1]_tests.cmake")
-else()
-  add_test(tests_all_NOT_BUILT tests_all_NOT_BUILT)
-endif()
