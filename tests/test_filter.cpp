@@ -301,12 +301,7 @@ TEST(RangeFilterTest, RangeFromSpecificToBroadcast) {
   EXPECT_FALSE(range->matches(ip_out));
 }
 
-// ============================================================================
-// Тесты с реальными IP адресами
-// ============================================================================
-
 TEST(RangeFilterTest, PrivateNetworkRange) {
-  // Диапазон частных адресов 192.168.0.0 - 192.168.255.255
   auto range = RangeFilter::create("192.168.0.0", "192.168.255.255");
   ASSERT_TRUE(range.has_value());
 

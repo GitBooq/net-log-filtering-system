@@ -1,0 +1,1 @@
+/usr/bin/c++ -fsanitize=address,undefined CMakeFiles/tests_all.dir/test_ipaddr.cpp.o CMakeFiles/tests_all.dir/test_filter.cpp.o CMakeFiles/tests_all.dir/test_streamproc.cpp.o -o tests_all  ../lib/libgtest_main.a ../lib/libgtest.a 
