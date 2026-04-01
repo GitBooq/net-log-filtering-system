@@ -12,8 +12,8 @@ using namespace net::logger;
 int main() try {
   StreamProcessor sp;
   auto filter =
-      create_filter({{"type", "subnet", "value", "0.0.0.0/0"},
-                     {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
+      create_filter({{"type", "subnet", "value", "192.168.0.0/24"},
+                     {"type", "range", "value", "10.0.0.1-10.0.0.255"}});
 
   std::ifstream input("test.log");
 
@@ -26,7 +26,7 @@ int main() try {
   process_stream(input, std::cout, filter);
   std::cout << std::string(40, '\\') << std::endl;
 
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
   std::cerr << e.what() << std::endl;
 } catch (...) {
   std::cerr << "Unknown exception caught" << std::endl;

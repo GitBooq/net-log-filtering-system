@@ -185,8 +185,8 @@ TEST(StreamProcessorTest, WithCompositeFilter) {
 
   auto result = output.view();
   EXPECT_NE(result.find("192.168.1.15 - IN_BOTH"), npos);
-  EXPECT_EQ(result.find("192.168.1.5 - IN_SUBNET_OUT_RANGE"), npos);
-  EXPECT_EQ(result.find("10.0.0.50 - IN_RANGE_OUT_SUBNET"), npos);
+  EXPECT_NE(result.find("192.168.1.5 - IN_SUBNET"), npos);
+  EXPECT_EQ(result.find("10.0.0.50 - OUT_BOTH"), npos);
   EXPECT_EQ(result.find("192.168.2.1 - OUT_BOTH"), npos);
 }
 

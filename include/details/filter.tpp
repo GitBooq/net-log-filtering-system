@@ -80,10 +80,10 @@ inline std::optional<RangeFilter> RangeFilter::create(std::string_view left,
 
 inline bool CompositeFilter::matches(const IPv4Address& ip) const {
   for (const auto& f : filters_) {
-    if (!std::visit([&ip](const auto& filter) { return filter.matches(ip); },
+    if (std::visit([&ip](const auto& filter) { return filter.matches(ip); },
                     f))
-      return false;
+      return true;
   }
-  return true;
+  return false;
 }
 }  // namespace net::details

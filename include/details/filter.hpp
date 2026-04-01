@@ -163,7 +163,7 @@ class CompositeFilter {
   }
 
   /**
-   * @brief Check if ip mathes all stored filters
+   * @brief Check if ip mathes any stored filters
    *
    * @param ip ip to check
    * @return true
