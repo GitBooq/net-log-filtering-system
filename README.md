@@ -21,11 +21,10 @@ A streaming log processing system with IPv4 address filtering capabilities.
 #include "netlogger/netlogger.hpp"
 
 int main() {
-  StreamProcessor sp;
   // Create filter: IP must satisfy at least one rule
   auto filter =
       create_filter({{"type", "subnet", "value", "192.168.0.0/24"},
-                      {"type", "range", "value", "10.0.0.1-10.0.0.255"}});
+                      {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
 
   std::ifstream input("test.log");
   // Process stream and output to console
