@@ -74,7 +74,7 @@ struct FilterConfig {
  * @param configs filter string representations
  * @note Usage:
  *   auto filter =
-      create_filter({{"type", "subnet", "value", "0.0.0.0/0"},
+      CreateFilter({{"type", "subnet", "value", "0.0.0.0/0"},
                      {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
  * @return CompositeFilter
  */

@@ -165,7 +165,7 @@ TEST(StreamProcessorTest, WithCompositeFilter) {
   std::stringstream input;
   input << MakeLogLine("192.168.1.15", "IN_BOTH") << "\n";
   input << MakeLogLine("192.168.1.5", "IN_SUBNET_OUT_RANGE") << "\n";
-  input << MakeLogLine("10.0.0.50", "IN_RANGE_OUT_SUBNET") << "\n";
+  input << MakeLogLine("10.0.0.50", "OUT_BOTH") << "\n";
   input << MakeLogLine("192.168.2.1", "OUT_BOTH") << "\n";
 
   std::stringstream output;
@@ -182,7 +182,7 @@ TEST(StreamProcessorTest, WithCompositeFilter) {
 
   auto result = output.view();
   EXPECT_NE(result.find("192.168.1.15 - IN_BOTH"), kNpos);
-  EXPECT_NE(result.find("192.168.1.5 - IN_SUBNET"), kNpos);
+  EXPECT_EQ(result.find("192.168.1.5 - IN_SUBNET_OUT_RANGE"), kNpos);
   EXPECT_EQ(result.find("10.0.0.50 - OUT_BOTH"), kNpos);
   EXPECT_EQ(result.find("192.168.2.1 - OUT_BOTH"), kNpos);
 }

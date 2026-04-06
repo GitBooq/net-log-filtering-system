@@ -27,8 +27,7 @@ struct Filter {
    * @brief Check if ip matches the filter
    *
    * @param ip ip address
-   * @return true
-   * @return false
+   * @return true if IP matches filter, false otherwise
    */
   bool Matches(const IPv4Address& ip) const {
     return static_cast<const Derived*>(this)->MatchesImpl(ip);
@@ -71,8 +70,7 @@ class SubnetFilter : public Filter<SubnetFilter> {
    * @brief Check if ip matches filter
    *
    * @param ip ip to check
-   * @return true
-   * @return false
+   * @return true if IP matches filter, false otherwise
    */
   bool MatchesImpl(const IPv4Address& ip) const noexcept {
     return (ip.ToUint32() & mask_) == network_;
@@ -113,8 +111,7 @@ class RangeFilter : public Filter<RangeFilter> {
    * @brief Check if ip matches filter
    *
    * @param ip ip to check
-   * @return true
-   * @return false
+   * @return true if IP matches filter, false otherwise
    */
   bool MatchesImpl(const IPv4Address& ip) const noexcept {
     const auto& [left, right] = ip_range_;
@@ -163,11 +160,10 @@ class CompositeFilter {
   }
 
   /**
-   * @brief Check if ip mathes any stored filters
+   * @brief Check if ip matches all stored filters
    *
    * @param ip ip to check
-   * @return true
-   * @return false
+   * @return true if IP matches all filters, false otherwise
    */
   bool Matches(const IPv4Address& ip) const;
 };
