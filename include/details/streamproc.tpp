@@ -31,7 +31,7 @@ void StreamProcessor::Process(std::istream& input, std::ostream& output,
 
     auto ip = ParseIPFromLine(line);
 
-    if (ip && filter.matches(*ip)) {
+    if (ip && filter.Matches(*ip)) {
       buffer_.push_back({*ip, line, line_number});
     }
 
