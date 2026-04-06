@@ -10,10 +10,9 @@
 using namespace net::logger;
 
 int main() try {
-  StreamProcessor sp;
   auto filter =
       create_filter({{"type", "subnet", "value", "192.168.0.0/24"},
-                     {"type", "range", "value", "10.0.0.1-10.0.0.255"}});
+                     {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
 
   std::ifstream input("test.log");
 
