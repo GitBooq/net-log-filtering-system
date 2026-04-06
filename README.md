@@ -23,12 +23,12 @@ A streaming log processing system with IPv4 address filtering capabilities.
 int main() {
   // Create filter: IP must satisfy at least one rule
   auto filter =
-      create_filter({{"type", "subnet", "value", "192.168.0.0/24"},
-                      {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
+      CreateFilter({{"type", "subnet", "value", "192.168.0.0/24"},
+                      {"type", "range", "value", "10.0.0.1-10.0.0.255"}});
 
   std::ifstream input("test.log");
   // Process stream and output to console
-  process_stream(input, std::cout, filter);
+  ProcessStream(input, std::cout, filter);
 }
 ```
 

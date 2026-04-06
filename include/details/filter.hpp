@@ -30,8 +30,8 @@ struct Filter {
    * @return true
    * @return false
    */
-  bool matches(const IPv4Address& ip) const {
-    return static_cast<const Derived*>(this)->matches_impl(ip);
+  bool Matches(const IPv4Address& ip) const {
+    return static_cast<const Derived*>(this)->MatchesImpl(ip);
   }
 
  protected:
@@ -43,7 +43,7 @@ struct Filter {
  */
 template <typename T>
 concept FilterType = requires(const T& t, const IPv4Address& ip) {
-  { t.matches(ip) } -> std::same_as<bool>;
+  { t.Matches(ip) } -> std::same_as<bool>;
 };
 
 /**
@@ -65,7 +65,7 @@ class SubnetFilter : public Filter<SubnetFilter> {
    * @param cidr CIDR string
    * @return std::optional<SubnetFilter>
    */
-  static std::optional<SubnetFilter> create(std::string_view cidr);
+  static std::optional<SubnetFilter> Create(std::string_view cidr);
 
   /**
    * @brief Check if ip matches filter
@@ -74,8 +74,8 @@ class SubnetFilter : public Filter<SubnetFilter> {
    * @return true
    * @return false
    */
-  bool matches_impl(const IPv4Address& ip) const noexcept {
-    return (ip.to_uint32() & mask_) == network_;
+  bool MatchesImpl(const IPv4Address& ip) const noexcept {
+    return (ip.ToUint32() & mask_) == network_;
   }
 };
 
@@ -85,10 +85,10 @@ class SubnetFilter : public Filter<SubnetFilter> {
  */
 class RangeFilter : public Filter<RangeFilter> {
  private:
-  std::pair<IPv4Address, IPv4Address> ip_range;
+  std::pair<IPv4Address, IPv4Address> ip_range_;
 
   RangeFilter(const IPv4Address& first, const IPv4Address& last)
-      : ip_range{first, last} {}
+      : ip_range_{first, last} {}
 
  public:
   /**
@@ -97,7 +97,7 @@ class RangeFilter : public Filter<RangeFilter> {
    * @param range range string
    * @return std::optional<RangeFilter>
    */
-  static std::optional<RangeFilter> create(std::string_view range);
+  static std::optional<RangeFilter> Create(std::string_view range);
 
   /**
    * @brief Creates filter from two strings
@@ -106,7 +106,7 @@ class RangeFilter : public Filter<RangeFilter> {
    * @param right hi bound
    * @return std::optional<RangeFilter>
    */
-  static std::optional<RangeFilter> create(std::string_view left,
+  static std::optional<RangeFilter> Create(std::string_view left,
                                            std::string_view right);
 
   /**
@@ -116,8 +116,8 @@ class RangeFilter : public Filter<RangeFilter> {
    * @return true
    * @return false
    */
-  bool matches_impl(const IPv4Address& ip) const noexcept {
-    const auto& [left, right] = ip_range;
+  bool MatchesImpl(const IPv4Address& ip) const noexcept {
+    const auto& [left, right] = ip_range_;
     return ip == std::clamp(ip, left, right);
   }
 };
@@ -128,7 +128,7 @@ class RangeFilter : public Filter<RangeFilter> {
  * @param prefix subnet prefix
  * @return constexpr uint32_t
  */
-constexpr uint32_t create32BitMask(uint32_t prefix);
+constexpr uint32_t Create32BitMask(uint32_t prefix);
 
 /**
  * @brief Check if range [left, right] is valid
@@ -138,7 +138,7 @@ constexpr uint32_t create32BitMask(uint32_t prefix);
  * @return true
  * @return false
  */
-constexpr bool isValidRange(uint32_t left, uint32_t right);
+constexpr bool IsValidRange(uint32_t left, uint32_t right);
 
 /**
  * @brief Class to compose and store all filters
@@ -158,7 +158,7 @@ class CompositeFilter {
    * @param filter filter to add
    */
   template <FilterType T>
-  void add(T&& filter) {
+  void Add(T&& filter) {
     filters_.push_back(std::forward<T>(filter));
   }
 
@@ -169,7 +169,7 @@ class CompositeFilter {
    * @return true
    * @return false
    */
-  bool matches(const IPv4Address& ip) const;
+  bool Matches(const IPv4Address& ip) const;
 };
 }  // namespace net::details
 

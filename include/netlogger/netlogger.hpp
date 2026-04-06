@@ -43,7 +43,7 @@ struct FilterConfig {
   std::string type;   ///< filter type
   std::string value;  ///< ipv4addr
 
-  static constexpr size_t FIELDS = 4;  ///< number of fields in config line
+  static constexpr size_t kFields = 4;  ///< number of fields in config line
 
   /**
    * @brief Construct a new Filter Config object from init list of strings.
@@ -52,7 +52,7 @@ struct FilterConfig {
    * @param il init list
    */
   FilterConfig(std::initializer_list<std::string> il) {
-    if (il.size() != FIELDS) {
+    if (il.size() != kFields) {
       throw FilterConfigError("FilterConfig expects 4 fields");
     }
     const std::string* arr = il.begin();
@@ -78,17 +78,17 @@ struct FilterConfig {
                      {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
  * @return CompositeFilter
  */
-inline CompositeFilter create_filter(const std::vector<FilterConfig>& configs) {
+inline CompositeFilter CreateFilter(const std::vector<FilterConfig>& configs) {
   CompositeFilter filter;
 
   for (const auto& cfg : configs) {
     if (cfg.type == "subnet") {
-      if (auto subnet = SubnetFilter::create(cfg.value)) {
-        filter.add(std::move(*subnet));
+      if (auto subnet = SubnetFilter::Create(cfg.value)) {
+        filter.Add(std::move(*subnet));
       }
     } else if (cfg.type == "range") {
-      if (auto range = RangeFilter::create(cfg.value))
-        filter.add(std::move(*range));
+      if (auto range = RangeFilter::Create(cfg.value))
+        filter.Add(std::move(*range));
     }
   }
 
@@ -102,10 +102,10 @@ inline CompositeFilter create_filter(const std::vector<FilterConfig>& configs) {
  * @param output
  * @param filter
  */
-inline void process_stream(std::istream& input, std::ostream& output,
-                           const CompositeFilter& filter) {
+inline void ProcessStream(std::istream& input, std::ostream& output,
+                          const CompositeFilter& filter) {
   StreamProcessor processor;
-  processor.process(input, output, filter);
+  processor.Process(input, output, filter);
 }
 
 }  // namespace net::logger

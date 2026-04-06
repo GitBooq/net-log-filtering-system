@@ -21,7 +21,7 @@
 namespace net::details {
 
 template <FilterType T>
-void StreamProcessor::process(std::istream& input, std::ostream& output,
+void StreamProcessor::Process(std::istream& input, std::ostream& output,
                               const T& filter) {
   std::string line;
   size_t line_number = 0;
@@ -29,21 +29,21 @@ void StreamProcessor::process(std::istream& input, std::ostream& output,
   while (std::getline(input, line)) {
     ++line_number;
 
-    auto ip = parse_ip_from_line(line);
+    auto ip = ParseIPFromLine(line);
 
     if (ip && filter.matches(*ip)) {
       buffer_.push_back({*ip, line, line_number});
     }
 
     if (buffer_.size() >= batch_size_) {
-      flush_buffer(output);
+      FlushBuffer(output);
     }
   }
 
-  if (!buffer_.empty()) flush_buffer(output);
+  if (!buffer_.empty()) FlushBuffer(output);
 }
 
-inline std::optional<IPv4Address> StreamProcessor::parse_ip_from_line(
+inline std::optional<IPv4Address> StreamProcessor::ParseIPFromLine(
     const std::string& line) const {
   size_t end = line.find(' ');
   if (end == std::string::npos) {
@@ -51,11 +51,11 @@ inline std::optional<IPv4Address> StreamProcessor::parse_ip_from_line(
   }
 
   std::string_view ip_str(line.data(), end);
-  return IPv4Address::from_string(ip_str);
+  return IPv4Address::FromString(ip_str);
 }
 
 // Output buffer to ostream and clear
-inline void StreamProcessor::flush_buffer(std::ostream& output) {
+inline void StreamProcessor::FlushBuffer(std::ostream& output) {
   if (buffer_.empty()) return;
 
   std::ranges::copy(buffer_ | std::views::transform(&LogEntry::line),

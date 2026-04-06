@@ -41,7 +41,7 @@ class StreamProcessor {
    * @param filter filter to apply to input stream
    */
   template <FilterType T>
-  void process(std::istream& input, std::ostream& output, const T& filter);
+  void Process(std::istream& input, std::ostream& output, const T& filter);
 
  private:
   /**
@@ -60,14 +60,14 @@ class StreamProcessor {
    * @param line string to parse
    * @return std::optional<IPv4Address>
    */
-  std::optional<IPv4Address> parse_ip_from_line(const std::string& line) const;
+  std::optional<IPv4Address> ParseIPFromLine(const std::string& line) const;
 
   /**
    * @brief Output buffer and clear
    *
    * @param output output stream
    */
-  void flush_buffer(std::ostream& output);
+  void FlushBuffer(std::ostream& output);
 
   static constexpr size_t DEFAULT_BATCH_SIZE = 1000u;
 

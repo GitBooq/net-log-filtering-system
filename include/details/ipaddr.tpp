@@ -14,13 +14,13 @@
 
 namespace net::details {
 
-struct IPv4Address;
+class IPv4Address;
 
-inline std::optional<IPv4Address> IPv4Address::from_string(
+inline std::optional<IPv4Address> IPv4Address::FromString(
     std::string_view str_view) {
-  if (!containValidIPSymbols(str_view)) return std::nullopt;
+  if (!ContainValidIPSymbols(str_view)) return std::nullopt;
 
-  oct_arr_t octets;
+  OctArr octets;
   const char* ptr = str_view.data();
   const char* end = ptr + str_view.size();
   int dot_count = 0;
@@ -62,10 +62,10 @@ inline std::optional<IPv4Address> IPv4Address::from_string(
   // should not be any symbols after IP and exact 3 dots
   if (ptr != end || dot_count != 3) return std::nullopt;
 
-  return from_bytes(octets);
+  return FromBytes(octets);
 }
 
-inline std::optional<IPv4Address> IPv4Address::from_bytes(oct_arr_t octets) {
+inline std::optional<IPv4Address> IPv4Address::FromBytes(OctArr octets) {
   for (auto octet : octets) {
     if (octet > 255) {
       return std::nullopt;
@@ -74,7 +74,7 @@ inline std::optional<IPv4Address> IPv4Address::from_bytes(oct_arr_t octets) {
   return IPv4Address(octets);
 }
 
-inline bool containValidIPSymbols(std::string_view ip) {
+inline bool ContainValidIPSymbols(std::string_view ip) {
   for (char ch : ip) {
     if (!(ch >= '0' && ch <= '9') && ch != '.') {
       return false;
