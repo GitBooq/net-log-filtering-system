@@ -1,0 +1,5 @@
+arch.txt
+build/
+docs/
+.vscode/
+Doxyfile
