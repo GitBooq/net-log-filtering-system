@@ -1,5 +1,5 @@
 /**
- * @file filter.hpp
+ * @file filter.h
  * @brief Filters
  */
 
@@ -16,7 +16,7 @@
 #include <variant>      // for variant
 #include <vector>       // for vector
 
-#include "ipaddr.hpp"  // for IPv4Address
+#include "ip_v4_address.h"  // for IPv4Address
 
 namespace net::details {
 
@@ -141,7 +141,7 @@ inline constexpr bool IsValidRange(uint32_t left, uint32_t right);
 
 /**
  * @brief Check if prefix is valid
- * 
+ *
  * @param prefix CIDR prefix to check
  * @return true if prefix is valid (is in range [0, 32]), false otherwise
  */
@@ -189,4 +189,4 @@ class CompositeFilter {
 };
 }  // namespace net::details
 
-#include "details/filter.tpp"
+#include "details/filter.inc"

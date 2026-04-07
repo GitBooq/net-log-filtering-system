@@ -1,22 +1,22 @@
 /**
- * @file streamproc.tpp
+ * @file stream_processor.inc
  * @brief Stream Processor impl
  */
 
 #pragma once
 
-#include <algorithm>    // for __copy_fn, copy
+#include <algorithm>    // for copy
 #include <cstddef>      // for size_t
 #include <istream>      // for char_traits, basic_istream, operator<<
 #include <iterator>     // for ostream_iterator
 #include <optional>     // for optional, nullopt
-#include <ranges>       // for transform_view, all_t, _Partial, _Tran...
+#include <ranges>       // for transform_view
 #include <string>       // for basic_string, string, getline
 #include <string_view>  // for string_view
 #include <vector>       // for vector
 
-#include "details/filter.hpp"  // for FilterType
-#include "details/ipaddr.hpp"  // for IPv4Address
+#include "details/filter.h"         // for FilterType
+#include "details/ip_v4_address.h"  // for IPv4Address
 
 namespace net::details {
 

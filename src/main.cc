@@ -5,7 +5,7 @@
 #include <string>     // for allocator, basic_string, operator<<
 #include <vector>     // for vector
 
-#include "netlogger/netlogger.hpp"  // for FilterConfig, create_filter, proc...
+#include "net_logger/net_logger.h"  // for FilterConfig, CreateFilter
 
 using namespace net::logger;
 

@@ -1,5 +1,5 @@
 /**
- * @file filter.tpp
+ * @file filter.inc
  * @brief Filters impl
  */
 #pragma once
@@ -12,7 +12,7 @@
 #include <variant>       // for visit, variant
 #include <vector>        // for vector
 
-#include "ipaddr.hpp"  // for IPv4Address
+#include "ip_v4_address.h"  // for IPv4Address
 
 namespace net::details {
 // Forward dcls
@@ -46,7 +46,8 @@ inline std::optional<SubnetFilter> SubnetFilter::Create(std::string_view cidr) {
       prefix_str.data(), prefix_str.data() + prefix_str.size(), prefix);
 
   // prefix_str consist of only valid integer prefix
-  if (ec != std::errc() || ptr != prefix_str.cend() || !IsValidCIDRPrefix(prefix)) {
+  if (ec != std::errc() || ptr != prefix_str.cend() ||
+      !IsValidCIDRPrefix(prefix)) {
     return std::nullopt;
   }
 

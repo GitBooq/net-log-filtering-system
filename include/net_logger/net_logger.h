@@ -16,8 +16,8 @@
 #include <utility>           // for move
 #include <vector>            // for vector
 
-#include "details/filter.hpp"      // for CompositeFilter, RangeFilter, Subn...
-#include "details/streamproc.hpp"  // for StreamProcessor
+#include "details/filter.h"  // for CompositeFilter, RangeFilter, Subn...
+#include "details/stream_processor.h"  // for StreamProcessor
 
 namespace net::logger {
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(netLogger LANGUAGES CXX)
+project(NetLogger LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,27 +21,27 @@ endif()
 
 include_directories(${INCLUDE_DIR})
 
-add_library(ipaddr INTERFACE)
-target_include_directories(ipaddr INTERFACE
+add_library(IPv4Address INTERFACE)
+target_include_directories(IPv4Address INTERFACE
     ${INCLUDE_DIR}
 )
 
-add_library(filter INTERFACE)
-target_link_libraries(filter INTERFACE ipaddr)
+add_library(Filter INTERFACE)
+target_link_libraries(Filter INTERFACE IPv4Address)
 
-add_library(streamproc INTERFACE)
-target_link_libraries(streamproc INTERFACE 
-    ipaddr
-    filter
+add_library(StreamProcessor INTERFACE)
+target_link_libraries(StreamProcessor INTERFACE 
+    IPv4Address
+    Filter
 )
 
-add_executable(main
-    ${SRC_DIR}/main.cpp
+add_executable(Main
+    ${SRC_DIR}/main.cc
 )
-target_link_libraries(main PRIVATE 
-    ipaddr
-    filter
-    streamproc
+target_link_libraries(Main PRIVATE 
+    IPv4Address
+    Filter
+    StreamProcessor
 )
 
 if (ENABLE_SANITIZERS)

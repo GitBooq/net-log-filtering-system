@@ -1,7 +1,8 @@
+#include "details/stream_processor.h"
+
 #include <sstream>
 #include <string>
 
-#include "details/streamproc.hpp"
 #include "gtest/gtest.h"
 
 using namespace net::details;

@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
+#include "details/ip_v4_address.h"
 
-#include "details/ipaddr.hpp"
+#include <gtest/gtest.h>
 
 using net::details::IPv4Address;
 

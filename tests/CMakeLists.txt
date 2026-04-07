@@ -1,14 +1,14 @@
 add_executable(tests_all
-    test_ipaddr.cpp
-    test_filter.cpp
-    test_streamproc.cpp
-    test_netlogger.cpp
+    ip_v4_address_test.cc
+    filter_test.cc
+    stream_processor_test.cc
+    net_logger_test.cc
 )
 
 target_link_libraries(tests_all
-    ipaddr
-    filter
-    streamproc
+    IPv4Address
+    Filter
+    StreamProcessor
     GTest::gtest_main
 )
 

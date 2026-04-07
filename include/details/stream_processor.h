@@ -1,5 +1,5 @@
 /**
- * @file streamproc.hpp
+ * @file stream_processor.h
  * @brief Stream Processor
  */
 #pragma once
@@ -10,8 +10,8 @@
 #include <string>    // for string
 #include <vector>    // for vector
 
-#include "filter.hpp"  // for FilterType
-#include "ipaddr.hpp"  // for IPv4Address
+#include "filter.h"         // for FilterType
+#include "ip_v4_address.h"  // for IPv4Address
 
 namespace net::details {
 
@@ -77,4 +77,4 @@ class StreamProcessor {
 
 }  // namespace net::details
 
-#include "details/streamproc.tpp"
+#include "details/stream_processor.inc"

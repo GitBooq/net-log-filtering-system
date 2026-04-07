@@ -1,5 +1,5 @@
 /**
- * @file ipaddr.hpp
+ * @file ip_v4_address.h
  * @brief IPv4Address class
  */
 #pragma once
@@ -79,4 +79,4 @@ class IPv4Address {
 inline bool ContainValidIPSymbols(std::string_view ip);
 }  // namespace net::details
 
-#include "details/ipaddr.tpp"
+#include "details/ip_v4_address.inc"

@@ -1,7 +1,8 @@
+#include "details/filter.h"
+
 #include <gtest/gtest.h>
 
-#include "details/filter.hpp"
-#include "details/ipaddr.hpp"
+#include "details/ip_v4_address.h"
 
 using net::details::IPv4Address;
 using net::details::RangeFilter;
