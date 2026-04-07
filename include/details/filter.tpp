@@ -19,11 +19,17 @@ namespace net::details {
 class RangeFilter;
 class SubnetFilter;
 
-constexpr uint32_t Create32BitMask(uint32_t prefix) {
+inline constexpr uint32_t Create32BitMask(uint32_t prefix) {
   return (prefix == 0) ? 0 : (0xFFFFFFFF << (32 - prefix));
 }
-constexpr bool IsValidRange(uint32_t left, uint32_t right) {
+
+inline constexpr bool IsValidRange(uint32_t left, uint32_t right) {
   return left <= right;
+}
+
+inline constexpr bool IsValidCIDRPrefix(int prefix) {
+  if (prefix < 0 || prefix > 32) return false;
+  return true;
 }
 
 inline std::optional<SubnetFilter> SubnetFilter::Create(std::string_view cidr) {
@@ -39,7 +45,8 @@ inline std::optional<SubnetFilter> SubnetFilter::Create(std::string_view cidr) {
   auto [ptr, ec] = std::from_chars(
       prefix_str.data(), prefix_str.data() + prefix_str.size(), prefix);
 
-  if (ec != std::errc() || prefix < 0 || prefix > 32) {
+  // prefix_str consist of only valid integer prefix
+  if (ec != std::errc() || ptr != prefix_str.cend() || !IsValidCIDRPrefix(prefix)) {
     return std::nullopt;
   }
 
@@ -78,9 +85,20 @@ inline std::optional<RangeFilter> RangeFilter::Create(std::string_view left,
   return RangeFilter{ip_left.value(), ip_right.value()};
 }
 
+template <FilterType T>
+inline void CompositeFilter::Add(T&& filter) {
+  if (filters_.size() < kMaxFilters) {
+    filters_.push_back(std::forward<T>(filter));
+  } else {
+    throw std::length_error(
+        std::format("Maximum number of rules {} exceeded.", kMaxFilters));
+  }
+}
+
 inline bool CompositeFilter::Matches(const IPv4Address& ip) const {
   for (const auto& f : filters_) {
-    if (!std::visit([&ip](const auto& filter) { return filter.Matches(ip); }, f))
+    if (!std::visit([&ip](const auto& filter) { return filter.Matches(ip); },
+                    f))
       return false;
   }
   return true;

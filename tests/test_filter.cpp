@@ -57,6 +57,7 @@ TEST_F(SubnetFilterTest, CreateInvalidSubnet) {
   EXPECT_FALSE(SubnetFilter::Create("invalid/24").has_value());
   EXPECT_FALSE(SubnetFilter::Create("192.168.1.256/24").has_value());
   EXPECT_FALSE(SubnetFilter::Create("/24").has_value());
+  EXPECT_FALSE(SubnetFilter::Create("192.168.1.0/24abc").has_value());
 }
 
 TEST_F(SubnetFilterTest, Subnet24MatchesIPInRange) {

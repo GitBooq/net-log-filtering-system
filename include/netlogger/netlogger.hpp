@@ -8,6 +8,7 @@
 #include <array>             // for array
 #include <cstddef>           // for size_t
 #include <exception>         // for exception
+#include <format>            // for format
 #include <initializer_list>  // for initializer_list
 #include <iosfwd>            // for istream, ostream
 #include <optional>          // for optional
@@ -40,15 +41,16 @@ class FilterConfigError final : public std::exception {
  *
  */
 struct FilterConfig {
-  std::string type;   ///< filter type
-  std::string value;  ///< ipv4addr
+  std::string type_;   ///< filter type
+  std::string value_;  ///< ipv4addr
 
+ public:
   static constexpr size_t kFields = 4;  ///< number of fields in config line
 
   /**
    * @brief Construct a new Filter Config object from init list of strings.
    *
-   * @throw FilterConfigError
+   * @throw FilterConfigError if bad format
    * @param il init list
    */
   FilterConfig(std::initializer_list<std::string> il) {
@@ -63,32 +65,47 @@ struct FilterConfig {
           "Invalid format: expected 'type' and 'value' keys");
     }
 
-    type = val1;
-    value = val2;
+    type_ = val1;
+    value_ = val2;
   }
 };
 
 /**
  * @brief Create a filter object.
- * Compose filters such as ip should match all filters.(AND)
+ * Compose filters(up to 20) such as ip should match all filters.(AND)
+ *
  * @param configs filter string representations
+ *
+ * @throws std::length_error if exceeded CompositeFilter::kMaxFilters_
+ *
+ * @throws FilterConfigError if unsupported filter type
+ *
  * @note Usage:
  *   auto filter =
-      CreateFilter({{"type", "subnet", "value", "0.0.0.0/0"},
-                     {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
+ *    CreateFilter({{"type", "subnet", "value", "0.0.0.0/0"},
+ *                  {"type", "range", "value", "0.0.0.0-255.255.255.255"}});
+ *
+ * @note Supported filter types: subnet, range.
  * @return CompositeFilter
  */
 inline CompositeFilter CreateFilter(const std::vector<FilterConfig>& configs) {
   CompositeFilter filter;
 
   for (const auto& cfg : configs) {
-    if (cfg.type == "subnet") {
-      if (auto subnet = SubnetFilter::Create(cfg.value)) {
-        filter.Add(std::move(*subnet));
+    if (cfg.type_ == "subnet") {
+      if (auto subnet = SubnetFilter::Create(cfg.value_)) {
+        filter.Add(std::move(*subnet));  // can throw
+      } else {
+        throw FilterConfigError("Bad subnet filter format.");
       }
-    } else if (cfg.type == "range") {
-      if (auto range = RangeFilter::Create(cfg.value))
-        filter.Add(std::move(*range));
+    } else if (cfg.type_ == "range") {
+      if (auto range = RangeFilter::Create(cfg.value_)) {
+        filter.Add(std::move(*range));  // can throw
+      } else {
+        throw FilterConfigError("Bad range filter format.");
+      }
+    } else {
+      throw FilterConfigError("Unknown filter type.");
     }
   }
 

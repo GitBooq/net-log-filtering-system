@@ -8,7 +8,9 @@
 #include <algorithm>    // for clamp
 #include <concepts>     // for same_as
 #include <cstdint>      // for uint32_t
+#include <format>       // for format
 #include <optional>     // for optional
+#include <stdexcept>    // for logic_error
 #include <string_view>  // for string_view
 #include <utility>      // for forward, pair
 #include <variant>      // for variant
@@ -125,7 +127,7 @@ class RangeFilter : public Filter<RangeFilter> {
  * @param prefix subnet prefix
  * @return constexpr uint32_t
  */
-constexpr uint32_t Create32BitMask(uint32_t prefix);
+inline constexpr uint32_t Create32BitMask(uint32_t prefix);
 
 /**
  * @brief Check if range [left, right] is valid
@@ -135,7 +137,15 @@ constexpr uint32_t Create32BitMask(uint32_t prefix);
  * @return true
  * @return false
  */
-constexpr bool IsValidRange(uint32_t left, uint32_t right);
+inline constexpr bool IsValidRange(uint32_t left, uint32_t right);
+
+/**
+ * @brief Check if prefix is valid
+ * 
+ * @param prefix CIDR prefix to check
+ * @return true if prefix is valid (is in range [0, 32]), false otherwise
+ */
+inline constexpr bool IsValidCIDRPrefix(int prefix);
 
 /**
  * @brief Class to compose and store all filters
@@ -148,16 +158,17 @@ class CompositeFilter {
   std::vector<VarFilter> filters_;
 
  public:
+  static constexpr std::size_t kMaxFilters = 20;
+
   /**
    * @brief Adds filter
    *
    * @tparam T Filter
    * @param filter filter to add
+   * @throws std::length_error if exceeded kMaxFilters_
    */
   template <FilterType T>
-  void Add(T&& filter) {
-    filters_.push_back(std::forward<T>(filter));
-  }
+  void Add(T&& filter);
 
   /**
    * @brief Check if ip matches all stored filters
@@ -166,6 +177,15 @@ class CompositeFilter {
    * @return true if IP matches all filters, false otherwise
    */
   bool Matches(const IPv4Address& ip) const;
+
+  /**
+   * @brief Get filters count
+   *
+   * @return constexpr std::size_t
+   */
+  constexpr std::size_t filter_count() const noexcept {
+    return filters_.size();
+  }
 };
 }  // namespace net::details
 
