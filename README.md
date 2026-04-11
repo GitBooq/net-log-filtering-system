@@ -7,7 +7,7 @@ A streaming log processing system with IPv4 address filtering capabilities.
 - **Filter types:**
   - CIDR subnets (e.g., `192.168.0.0/24`)
   - IP ranges (e.g., `10.0.0.1-10.0.0.255`)
-  - Combined filters using logical `AND`
+  - Combined filters(up to 20) using logical `OR`
 - **Streaming processing** with buffering up to 1000 records
 
 ## Usage Example
@@ -43,9 +43,9 @@ int main() try {
 
   auto range_filter =
       CreateFilter({{"type", "range", "value", "192.168.1.10-192.168.1.20"}});
-      
+
   auto composite_filter =
-      CreateFilter({{"type", "subnet", "value", "192.168.1.0/24"},
+      CreateFilter({{"type", "subnet", "value", "10.0.0.0/24"},
                     {"type", "range", "value", "192.168.1.10-192.168.1.30"}});
 
   ProcessStream(buffer, std::cout, subnet_filter1);

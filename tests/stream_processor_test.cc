@@ -9,7 +9,7 @@ using namespace net::details;
 
 constexpr auto kNpos = std::string_view::npos;
 
-std::string MakeLogLine(const std::string& ip, const std::string& message) {
+std::string MakeLogLine(const std::string &ip, const std::string &message) {
   return ip + " - " + message;
 }
 
@@ -164,14 +164,14 @@ TEST(StreamProcessorTest, WithRangeFilter) {
 
 TEST(StreamProcessorTest, WithCompositeFilter) {
   std::stringstream input;
-  input << MakeLogLine("192.168.1.15", "IN_BOTH") << "\n";
-  input << MakeLogLine("192.168.1.5", "IN_SUBNET_OUT_RANGE") << "\n";
-  input << MakeLogLine("10.0.0.50", "OUT_BOTH") << "\n";
-  input << MakeLogLine("192.168.2.1", "OUT_BOTH") << "\n";
+  input << MakeLogLine("192.168.1.15", "MATCH") << "\n";
+  input << MakeLogLine("192.168.1.5", "NOT_MATCH") << "\n";
+  input << MakeLogLine("10.0.0.50", "MATCH") << "\n";
+  input << MakeLogLine("192.168.2.1", "NOT_MATCH") << "\n";
 
   std::stringstream output;
 
-  auto subnet = SubnetFilter::Create("192.168.1.0/24").value();
+  auto subnet = SubnetFilter::Create("10.0.0.0/24").value();
   auto range = RangeFilter::Create("192.168.1.10", "192.168.1.20").value();
 
   CompositeFilter composite;
@@ -182,10 +182,10 @@ TEST(StreamProcessorTest, WithCompositeFilter) {
   processor.Process(input, output, composite);
 
   auto result = output.view();
-  EXPECT_NE(result.find("192.168.1.15 - IN_BOTH"), kNpos);
-  EXPECT_EQ(result.find("192.168.1.5 - IN_SUBNET_OUT_RANGE"), kNpos);
-  EXPECT_EQ(result.find("10.0.0.50 - OUT_BOTH"), kNpos);
-  EXPECT_EQ(result.find("192.168.2.1 - OUT_BOTH"), kNpos);
+  EXPECT_NE(result.find("192.168.1.15 - MATCH"), kNpos);
+  EXPECT_EQ(result.find("192.168.1.5 - NOT_MATCH"), kNpos);
+  EXPECT_NE(result.find("10.0.0.50 - MATCH"), kNpos);
+  EXPECT_EQ(result.find("192.168.2.1 - NOT_MATCH"), kNpos);
 }
 
 TEST(StreamProcessorTest, InvalidIpLinesIgnored) {

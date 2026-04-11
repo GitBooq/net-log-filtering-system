@@ -1,11 +1,11 @@
-#include <exception>  // for exception
-#include <fstream>    // for basic_ostream, char_traits, opera...
-#include <iostream>   // for cerr, cout
-#include <sstream>    // for stringstream
-#include <string>     // for allocator, basic_string, operator<<
-#include <vector>     // for vector
+#include <exception> // for exception
+#include <fstream>   // for basic_ostream, char_traits, opera...
+#include <iostream>  // for cerr, cout
+#include <sstream>   // for stringstream
+#include <string>    // for allocator, basic_string, operator<<
+#include <vector>    // for vector
 
-#include "net_logger/net_logger.h"  // for FilterConfig, CreateFilter
+#include "net_logger/net_logger.h" // for FilterConfig, CreateFilter
 
 using namespace net::logger;
 
@@ -30,7 +30,7 @@ int main() try {
       CreateFilter({{"type", "range", "value", "192.168.1.10-192.168.1.20"}});
 
   auto composite_filter =
-      CreateFilter({{"type", "subnet", "value", "192.168.1.0/24"},
+      CreateFilter({{"type", "subnet", "value", "10.0.0.0/24"},
                     {"type", "range", "value", "192.168.1.10-192.168.1.30"}});
 
   ProcessStream(buffer, std::cout, subnet_filter1);
@@ -51,7 +51,7 @@ int main() try {
   ProcessStream(buffer, std::cout, composite_filter);
 
   return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
   std::cerr << e.what() << std::endl;
   return 1;
 } catch (...) {

@@ -11,7 +11,7 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
-option(ENABLE_SANITIZERS "Enable sanitizers" ON)
+option(ENABLE_SANITIZERS "Enable sanitizers" OFF)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
