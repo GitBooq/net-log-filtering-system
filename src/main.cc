@@ -20,35 +20,11 @@ int main() try {
   std::stringstream buffer;
   buffer << input.rdbuf();
 
-  auto subnet_filter1 =
-      CreateFilter({{"type", "subnet", "value", "192.168.1.0/24"}});
+  auto filter =
+      CreateFilter({{"type", "subnet", "value", "192.168.1.0/24"},
+  {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
 
-  auto subnet_filter2 =
-      CreateFilter({{"type", "subnet", "value", "10.0.0.0/24"}});
-
-  auto range_filter =
-      CreateFilter({{"type", "range", "value", "192.168.1.10-192.168.1.20"}});
-
-  auto composite_filter =
-      CreateFilter({{"type", "subnet", "value", "10.0.0.0/24"},
-                    {"type", "range", "value", "192.168.1.10-192.168.1.30"}});
-
-  ProcessStream(buffer, std::cout, subnet_filter1);
-  buffer.clear();
-  buffer.seekg(0, std::ios::beg);
-
-  std::cout << std::string(40, '/') << std::endl;
-  ProcessStream(buffer, std::cout, subnet_filter2);
-  buffer.clear();
-  buffer.seekg(0, std::ios::beg);
-
-  std::cout << std::string(40, '/') << std::endl;
-  ProcessStream(buffer, std::cout, range_filter);
-  buffer.clear();
-  buffer.seekg(0, std::ios::beg);
-
-  std::cout << std::string(40, '/') << std::endl;
-  ProcessStream(buffer, std::cout, composite_filter);
+  ProcessStream(buffer, std::cout, filter);
 
   return 0;
 } catch (const std::exception &e) {
