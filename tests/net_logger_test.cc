@@ -1,8 +1,6 @@
 #include "net_logger/net_logger.h"
 
 #include <cassert>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "gtest/gtest.h"
@@ -46,7 +44,7 @@ TEST(NetLoggerTest, CreateInvalidFilterBadFormat) {
 TEST(NetLoggerTest, CreateValidFilterMaxRules) {
   std::vector<FilterConfig> configs;
 
-  for (auto i = 0uz; i < MaxFilterRules; ++i) {
+  for (auto i = 0UZ; i < MaxFilterRules; ++i) {
     assert(i <= 255);
     configs.push_back(
         {"type", "subnet", "value", std::format("192.168.{}.0/24", i)});
@@ -58,7 +56,7 @@ TEST(NetLoggerTest, CreateValidFilterMaxRules) {
 TEST(NetLoggerTest, CreateInvalidFilterMaxRules) {
   std::vector<FilterConfig> configs;
 
-  for (auto i = 0uz; i < MaxFilterRules + 1; ++i) {
+  for (auto i = 0UZ; i < MaxFilterRules + 1; ++i) {
     assert(i <= 255);
     configs.push_back(
         {"type", "subnet", "value", std::format("192.168.{}.0/24", i)});

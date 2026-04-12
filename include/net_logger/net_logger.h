@@ -26,7 +26,7 @@ using net::details::SubnetFilter;
 
 class FilterConfigError final : public std::exception {
 public:
-  FilterConfigError(std::string msg) noexcept : msg_(std::move(msg)) {}
+  explicit FilterConfigError(std::string msg) noexcept : msg_(std::move(msg)) {}
 
   const char *what() const noexcept override { return msg_.c_str(); }
 

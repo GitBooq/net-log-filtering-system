@@ -4,7 +4,8 @@
  */
 #pragma once
 
-#include <array> // for array
+#include <algorithm> // for all_of
+#include <array>     // for array
 #include <charconv>
 #include <cstdint>     // for uint32_t
 #include <optional>    // for optional
@@ -88,8 +89,9 @@ class IPv4Address;
 
 inline std::optional<IPv4Address>
 IPv4Address::FromString(std::string_view str_view) {
-  if (!ContainValidIPSymbols(str_view))
+  if (!ContainValidIPSymbols(str_view)) {
     return std::nullopt;
+  }
 
   OctArr octets;
   const char *ptr = str_view.data();
@@ -124,16 +126,18 @@ IPv4Address::FromString(std::string_view str_view) {
 
     // xxx.xxx.xxx.xxx no dot at the end
     if (i < 3) {
-      if (ptr >= end || *ptr != dot)
+      if (ptr >= end || *ptr != dot) {
         return std::nullopt;
+      }
       ++ptr; // skip '.'
       ++dot_count;
     }
   }
 
   // should not be any symbols after IP and exact 3 dots
-  if (ptr != end || dot_count != 3)
+  if (ptr != end || dot_count != 3) {
     return std::nullopt;
+  }
 
   return FromBytes(octets);
 }
@@ -148,12 +152,7 @@ inline std::optional<IPv4Address> IPv4Address::FromBytes(OctArr octets) {
 }
 
 inline bool ContainValidIPSymbols(std::string_view ip) {
-  for (char ch : ip) {
-    if (!(ch >= '0' && ch <= '9') && ch != '.') {
-      return false;
-    }
-  }
-
-  return true;
+  return std::ranges::none_of(
+      ip, [](char ch) { return (ch < '0' || ch > '9') && ch != '.'; });
 }
 } // namespace net::details

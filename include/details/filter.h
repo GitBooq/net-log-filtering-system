@@ -126,7 +126,7 @@ public:
  * @param prefix subnet prefix
  * @return constexpr uint32_t
  */
-inline constexpr uint32_t Create32BitMask(uint32_t prefix);
+constexpr uint32_t Create32BitMask(uint32_t prefix);
 
 /**
  * @brief Check if range [left, right] is valid
@@ -136,7 +136,7 @@ inline constexpr uint32_t Create32BitMask(uint32_t prefix);
  * @return true
  * @return false
  */
-inline constexpr bool IsValidRange(uint32_t left, uint32_t right);
+constexpr bool IsValidRange(uint32_t left, uint32_t right);
 
 /**
  * @brief Check if prefix is valid
@@ -144,7 +144,7 @@ inline constexpr bool IsValidRange(uint32_t left, uint32_t right);
  * @param prefix CIDR prefix to check
  * @return true if prefix is valid (is in range [0, 32]), false otherwise
  */
-inline constexpr bool IsValidCIDRPrefix(int prefix);
+constexpr bool IsValidCIDRPrefix(int prefix);
 
 /**
  * @brief Class to compose and store all filters
@@ -196,29 +196,29 @@ public:
 class RangeFilter;
 class SubnetFilter;
 
-inline constexpr uint32_t Create32BitMask(uint32_t prefix) {
+constexpr uint32_t Create32BitMask(uint32_t prefix) {
   return (prefix == 0) ? 0 : (0xFFFFFFFF << (32 - prefix));
 }
 
-inline constexpr bool IsValidRange(uint32_t left, uint32_t right) {
+constexpr bool IsValidRange(uint32_t left, uint32_t right) {
   return left <= right;
 }
 
-inline constexpr bool IsValidCIDRPrefix(int prefix) {
-  if (prefix < 0 || prefix > 32)
-    return false;
-  return true;
+constexpr bool IsValidCIDRPrefix(int prefix) {
+  return prefix >= 0 && prefix <= 32;
 }
 
 inline std::optional<SubnetFilter> SubnetFilter::Create(std::string_view cidr) {
   auto slash_pos = cidr.find('/');
-  if (slash_pos == std::string_view::npos)
+  if (slash_pos == std::string_view::npos) {
     return std::nullopt;
+  }
 
   auto ip_str = cidr.substr(0, slash_pos);
   auto ip = IPv4Address::FromString(ip_str);
-  if (!ip)
+  if (!ip) {
     return std::nullopt;
+  }
 
   auto prefix_str = cidr.substr(slash_pos + 1);
   int prefix;
@@ -240,8 +240,9 @@ inline std::optional<SubnetFilter> SubnetFilter::Create(std::string_view cidr) {
 inline std::optional<RangeFilter> RangeFilter::Create(std::string_view range) {
   char sep = '-';
   auto dash_pos = range.find(sep);
-  if (dash_pos == std::string_view::npos)
+  if (dash_pos == std::string_view::npos) {
     return std::nullopt;
+  }
 
   auto left_str = range.substr(0, dash_pos);
   auto right_str = range.substr(dash_pos + 1);
@@ -249,10 +250,12 @@ inline std::optional<RangeFilter> RangeFilter::Create(std::string_view range) {
   auto left = IPv4Address::FromString(left_str);
   auto right = IPv4Address::FromString(right_str);
 
-  if (!left || !right)
+  if (!left || !right) {
     return std::nullopt;
-  if (!IsValidRange(left->ToUint32(), right->ToUint32()))
+  }
+  if (!IsValidRange(left->ToUint32(), right->ToUint32())) {
     return std::nullopt;
+  }
 
   return RangeFilter{left.value(), right.value()};
 }
@@ -262,10 +265,12 @@ inline std::optional<RangeFilter> RangeFilter::Create(std::string_view left,
   auto ip_left = IPv4Address::FromString(left);
   auto ip_right = IPv4Address::FromString(right);
 
-  if (!ip_left || !ip_right)
+  if (!ip_left || !ip_right) {
     return std::nullopt;
-  if (!IsValidRange(ip_left->ToUint32(), ip_right->ToUint32()))
+  }
+  if (!IsValidRange(ip_left->ToUint32(), ip_right->ToUint32())) {
     return std::nullopt;
+  }
 
   return RangeFilter{ip_left.value(), ip_right.value()};
 }
@@ -281,8 +286,10 @@ template <FilterType T> inline void CompositeFilter::Add(T &&filter) {
 
 inline bool CompositeFilter::Matches(const IPv4Address &ip) const {
   for (const auto &f : filters_) {
-    if (std::visit([&ip](const auto &filter) { return filter.Matches(ip); }, f))
+    if (std::visit([&ip](const auto &filter) { return filter.Matches(ip); },
+                   f)) {
       return true;
+    }
   }
   return false;
 }

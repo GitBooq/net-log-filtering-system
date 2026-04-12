@@ -2,7 +2,6 @@
 #include <fstream>   // for basic_ostream, char_traits, opera...
 #include <iostream>  // for cerr, cout
 #include <sstream>   // for stringstream
-#include <string>    // for allocator, basic_string, operator<<
 #include <vector>    // for vector
 
 #include "net_logger/net_logger.h" // for FilterConfig, CreateFilter
@@ -22,7 +21,7 @@ int main() try {
 
   auto filter =
       CreateFilter({{"type", "subnet", "value", "192.168.1.0/24"},
-  {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
+                    {"type", "range", "value", "10.0.0.1-10.0.0.100"}});
 
   ProcessStream(buffer, std::cout, filter);
 

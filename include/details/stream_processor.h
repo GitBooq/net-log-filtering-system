@@ -73,7 +73,7 @@ private:
    */
   void FlushBuffer(std::ostream &output);
 
-  static constexpr size_t DEFAULT_BATCH_SIZE = 1000u;
+  static constexpr size_t DEFAULT_BATCH_SIZE = 1000U;
 
   std::vector<LogEntry> buffer_; ///< buffer for output
   size_t batch_size_;            ///< max buffer size
@@ -105,8 +105,9 @@ void StreamProcessor::Process(std::istream &input, std::ostream &output,
     }
   }
 
-  if (!buffer_.empty())
+  if (!buffer_.empty()) {
     FlushBuffer(output);
+  }
 }
 
 inline std::optional<IPv4Address>
@@ -122,8 +123,9 @@ StreamProcessor::ParseIPFromLine(const std::string &line) const {
 
 // Output buffer to ostream and clear
 inline void StreamProcessor::FlushBuffer(std::ostream &output) {
-  if (buffer_.empty())
+  if (buffer_.empty()) {
     return;
+  }
 
   std::ranges::copy(buffer_ | std::views::transform(&LogEntry::line),
                     std::ostream_iterator<std::string>(output, "\n"));
