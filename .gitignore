@@ -3,3 +3,4 @@ build/
 docs/
 .vscode/
 Doxyfile
+.clang*
